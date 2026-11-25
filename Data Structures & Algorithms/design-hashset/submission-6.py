@@ -1,0 +1,65 @@
+
+# linked list 
+# each "bucket" inside the backing array is linked list node
+# on collision we keep adding the keys to the end of the linked list
+class ListNode:
+    def __init__(self, key):
+        self.key = key
+        self.next = None
+
+class MyHashSet:
+    def __init__(self):
+        # backing array initiliased to max number of add
+        # operations. each slot initialised to dummy linked list
+        self.set = [ListNode(0) for i in range(10**4)]
+        
+
+        # the hash function 
+        # modulo with size of backing array
+    def hash(self, key: int) -> int:
+        return key % len(self.set)
+
+    def add(self, key: int) -> None:
+        idx = self.hash(key)
+        curr = self.set[idx]
+
+        while curr.next:
+            # curr.next since first node is empty node
+            if curr.next.key == key:
+                return
+            curr = curr.next
+        curr.next = ListNode(key)
+
+    def remove(self, key: int) -> None:
+        idx = self.hash(key)
+        curr = self.set[idx]
+
+        while curr.next:
+            # curr.next since first node is empty node
+            if curr.next.key == key:
+                # make the node containing the key vanish
+                # A -> B -> C
+                # becomes
+                # A -> C
+                curr.next = curr.next.next
+                return
+            curr = curr.next
+        
+    def contains(self, key: int) -> bool:
+        idx = self.hash(key)
+        curr = self.set[idx]
+
+        while curr.next:
+            # curr.next since first node is empty node
+            if curr.next.key == key:
+                return True
+            curr = curr.next
+        return False
+        
+
+
+# Your MyHashSet object will be instantiated and called as such:
+# obj = MyHashSet()
+# obj.add(key)
+# obj.remove(key)
+# param_3 = obj.contains(key)
